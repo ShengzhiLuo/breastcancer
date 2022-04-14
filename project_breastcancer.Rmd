@@ -411,7 +411,7 @@ pathwise_sol %>%
 
 
 ## cross-validation
-```{r}
+```{r,warning=FALSE}
 set.seed(2022)
 cv = function(data, lambda) {
   n <- nrow(data)
@@ -480,7 +480,7 @@ cv_auc %>%
 
 
 ## Compare full model and lasso model
-```{r}
+```{r,warning=FALSE}
 #corresponding betas of best lambda
 lasso_beta <- pathwise_sol[which(pathwise_sol$lambda == bestlambda ),][2:21] %>% as.numeric()
 
@@ -488,10 +488,13 @@ lasso_beta <- pathwise_sol[which(pathwise_sol$lambda == bestlambda ),][2:21] %>%
 predict <- function(x, y, betavec) {
   theta <- x %*% betavec
   p <- exp(theta) / (1 + exp(theta))
-  auc <- auc(y, p)}
+  auc <- auc(y, p)
+  }
+y_test <- factor(breast_test$diagnosis)
 
 auc_lasso <- predict(x_test_stan, y_test, lasso_beta)
 auc_lasso
+
 
 cbind(auc_full, auc_lasso) %>% knitr::kable()
 
